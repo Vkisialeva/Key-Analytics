@@ -1,1 +1,3 @@
-
+TennisApp
+git config --global user.name "Viktoryia Kisialeva"
+git config --global user.email "vkisialeva4@gmail.com"
