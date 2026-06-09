@@ -1,0 +1,18 @@
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./src/app.py
+from src.app import app
+
+def test_home():
+    client = app.test_client()
+    response = client.get("/")
+    assert response.status_code == 200
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./src/app.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./src/app.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./src/app.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./src/PathOverlay.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/e2e/test_e2e.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/e2e/test_e2e.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/test_all.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/test_all.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/test_all.py
+/Users/vicakis/Desktop/Key-Analytics./tennisenv/bin/python /Users/vicakis/Desktop/Key-Analytics./tests/test_all.py
+

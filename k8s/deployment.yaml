@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: key-analytics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: key-analytics
+  template:
+    metadata:
+      labels:
+        app: key-analytics
+    spec:
+      containers:
+        - name: key-analytics
+          image: key-analytics:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000

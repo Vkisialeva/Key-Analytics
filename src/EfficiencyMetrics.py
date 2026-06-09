@@ -4,6 +4,7 @@ import numpy as np
 # 1. CLASSIFY MOVEMENT DIRECTION
 # ============================================================
 
+
 def classify_direction(du, dv, player_side="near", threshold=0.002):
     """
     Determine if movement is left, right, forward, or backward
@@ -11,17 +12,23 @@ def classify_direction(du, dv, player_side="near", threshold=0.002):
     """
     # Horizontal movement
     if abs(du) > abs(dv):
-        if du > threshold:  return "right"
-        if du < -threshold: return "left"
+        if du > threshold:
+            return "right"
+        if du < -threshold:
+            return "left"
 
     # Vertical movement (depends on near/far orientation)
     else:
         if player_side == "near":
-            if dv < -threshold: return "forward"
-            if dv >  threshold: return "backward"
+            if dv < -threshold:
+                return "forward"
+            if dv > threshold:
+                return "backward"
         else:  # far side player sees court flipped
-            if dv >  threshold: return "forward"
-            if dv < -threshold: return "backward"
+            if dv > threshold:
+                return "forward"
+            if dv < -threshold:
+                return "backward"
 
     return None
 
@@ -30,8 +37,15 @@ def classify_direction(du, dv, player_side="near", threshold=0.002):
 # 2. TIME TO RECOVER (MAIN METRIC) - IMPROVED
 # ============================================================
 
-def time_to_recover(player_positions, fps, player_side="near",
-                    threshold=0.002, stable_frames=3, close_open=False):
+
+def time_to_recover(
+    player_positions,
+    fps,
+    player_side="near",
+    threshold=0.002,
+    stable_frames=3,
+    close_open=False,
+):
     """
     Compute Time-to-Recover (TTR) for:
       - left
@@ -77,7 +91,9 @@ def time_to_recover(player_positions, fps, player_side="near",
 
         curr_neutral = is_neutral(u2, v2)
 
-        direction = classify_direction(du, dv, player_side=player_side, threshold=threshold)
+        direction = classify_direction(
+            du, dv, player_side=player_side, threshold=threshold
+        )
 
         # Debounce direction
         if direction is not None and direction == last_dir:
@@ -125,8 +141,9 @@ def time_to_recover(player_positions, fps, player_side="near",
 # 3. DISTANCE COVERED
 # ============================================================
 
-COURT_WIDTH_M  = 10.97   # singles sideline width
-COURT_LENGTH_M = 23.78   # baseline to baseline
+COURT_WIDTH_M = 10.97  # singles sideline width
+COURT_LENGTH_M = 23.78  # baseline to baseline
+
 
 def compute_distance(player_positions):
     """
@@ -147,25 +164,30 @@ def compute_distance(player_positions):
 # 4. EXAMPLE USAGE
 # ============================================================
 
-fps = 30
-player_side = "near"
-player_positions = [
-    (0.50, 0.90),
-    (0.48, 0.88),
-    (0.46, 0.86),
-    (0.42, 0.82),
-    (0.50, 0.90),   # back to neutral
-    (0.60, 0.85),   # new right movement
-    (0.65, 0.83),
-    (0.50, 0.90)    # back to neutral
-]
+if __name__ == "__main__":
+    fps = 30
+    player_side = "near"
+    player_positions = [
+        (0.50, 0.90),
+        (0.48, 0.88),
+        (0.46, 0.86),
+        (0.42, 0.82),
+        (0.50, 0.90),
+        (0.60, 0.85),
+        (0.65, 0.83),
+        (0.50, 0.90),
+    ]
 
-ttr_results = time_to_recover(player_positions, fps, player_side,
-                              threshold=0.002, stable_frames=1)  # stable_frames=1 for tiny demo
-distance_m  = compute_distance(player_positions)
+    ttr_results = time_to_recover(
+        player_positions, fps, player_side, threshold=0.002, stable_frames=1
+    )
+    distance_m = compute_distance(player_positions)
 
-print("TIME TO RECOVER:")
-for direction, times in ttr_results.items():
-    print(f"  {direction}: {np.mean(times) if times else 0:.2f} sec")
+    print("TIME TO RECOVER:")
+    for direction, times in ttr_results.items():
+        print(f"  {direction}: {np.mean(times) if times else 0:.2f} sec")
 
-print(f"\nDISTANCE COVERED: {distance_m:.2f} meters")
+    print(f"\nDISTANCE COVERED: {distance_m:.2f} meters")
+
+
+ 

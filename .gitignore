@@ -1,2 +1,10 @@
+__pycache__/
+*.pyc
 tennisenv
 *env
+.env
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store

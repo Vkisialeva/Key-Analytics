@@ -1,0 +1,8 @@
+1.create .gitignore and finalize project structure-DONE
+2.requirements.txt- seperate production vs dev dependencies DONE
+3.code formatting(auto- clean code) DONE
+4.static code quality(linting) DONE
+5.test coverage reporting DONE
+6.pre-commit hooks
+7.github actions cipipeline
+8.docker(deployment ready)
