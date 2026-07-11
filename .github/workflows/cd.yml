@@ -1,0 +1,42 @@
+name: KeyAnalytics CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["KeyAnalytics CI/CD Pipeline"]
+    types:
+      - completed
+    branches:
+      - development
+      - main
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: meta
+        run: echo "image_tag=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.30.2
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Deploy to staging
+        run: |
+          kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply -f k8s/ -n staging
+          kubectl set image deployment/key-analytics key-analytics=${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ steps.meta.outputs.image_tag }} -n staging
+          kubectl rollout status deployment/key-analytics -n staging --timeout=300s
