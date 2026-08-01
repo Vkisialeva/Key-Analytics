@@ -9,6 +9,11 @@ on:
       - development
       - main
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag to deploy (defaults to the commit SHA)"
+        required: false
+        default: ""
 
 jobs:
   deploy:
@@ -22,7 +27,12 @@ jobs:
 
       - name: Set image tag
         id: meta
-        run: echo "image_tag=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+        run: |
+          if [ -n "${{ inputs.image_tag }}" ]; then
+            echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "image_tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v4
@@ -35,9 +45,13 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
           chmod 600 "$HOME/.kube/config"
 
+      - name: Verify cluster access
+        run: kubectl cluster-info
+
       - name: Deploy to staging
         run: |
           kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -f k8s/ -n staging
           kubectl set image deployment/key-analytics key-analytics=${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ steps.meta.outputs.image_tag }} -n staging
           kubectl rollout status deployment/key-analytics -n staging --timeout=300s
+          kubectl get pods -n staging -l app=key-analytics

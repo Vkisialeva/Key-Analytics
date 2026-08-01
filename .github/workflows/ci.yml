@@ -47,7 +47,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Tag Docker image
-        run: docker tag key-analytics:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ github.sha }}
+        run: |
+          docker tag key-analytics:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ github.sha }}
+          docker tag key-analytics:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/key-analytics:${GITHUB_SHA::12}
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ github.sha }}
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/key-analytics:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/key-analytics:${GITHUB_SHA::12}
